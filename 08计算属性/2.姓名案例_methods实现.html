@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <input type="text" v-model="firstName"><br><br>
+        <input type="text" v-model="lastName"><br><br>
+        <!-- 对于事件绑定(将函数写在标签里面)而言 函数写不写括号都一样，但是对于差值语法而言就不同了 见下面 -->
+        <!-- 相当于将fullName函数插到此处 -->
+        全名：<span>{{fullName}}</span><br><br>      
+        <!-- 相当于将fullName函数的返回值插到此处 -->
+        全名：<span>{{fullName()}}</span>
+    </div>
+        <script>
+            const x = new Vue({
+                el:'#root',
+                data:{
+                    firstName:'张',
+                    lastName:'三'
+                },
+                methods:{
+                    fullName(){
+                        // return '小猪佩奇'
+                        return this.firstName+'-'+this.lastName
+                    }
+                }
+            })
+        </script>
+</body>
+</html>
