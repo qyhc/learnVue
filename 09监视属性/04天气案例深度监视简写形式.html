@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+
+<!--
+
+ -->
+
+    <div id = "root">
+        <h2>今天天气很{{info}}</h2>
+        <button @click="changeWeather">切换天气</button>
+
+    </div>
+    <script>
+        const vm = new Vue({
+            el:'#root',
+            data:{
+                isHost:true,
+                numbers:{
+                    a:1,
+                    b:2
+                }
+            },
+            computed:{
+                info(){
+                    return this.isHost?'炎热':'凉爽'
+                }
+            },
+            methods: {
+                changeWeather(){
+                    this.isHost = !this.isHost
+                }
+            },
+            // 正常写法
+            // watch:{
+            //     isHost:{
+            //         // handler什么时候调用？当isHot发生改变时
+            //         handler(v1,v2){
+            //             console.log('isHot被修改了',v1,v2)
+            //         }
+            //     }
+            // }
+
+            // 简写
+            watch:{
+                isHost(v1,v2){
+                    // handler什么时候调用？当isHot发生改变时
+                    console.log('isHot被修改了',v1,v2)
+                }
+            }
+        })
+        // 完整写法
+        // vm.$watch('isHost',{
+        //     immediate:true, //初始化时让handler调用一下
+        //     // handler什么时候调用？当isHot发生改变时
+        //     handler(v1,v2){
+        //         console.log('isHot被修改了',v1,v2)
+        //     }
+        // })
+
+        // 简写
+        vm.$watch('isHost',function(v1,v2){
+            console.log('isHot被修改了',v1,v2)
+        }
+        )
+    </script>
+</body>
+</html>
