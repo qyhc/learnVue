@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+
+     -->
+    <div id="root">
+        <app></app>
+    </div>
+</body>
+    <script>
+        // 定义定义student组件组件
+        const student = Vue.extend({
+            template:`
+            <div>
+                <h2>学生名称：{{name}}</h2>
+                <h2>学生年龄：{{age}}</h2>
+            </div>
+            `,
+            data(){
+                return{
+                    name:'张三',
+                    age:18
+                }
+            }
+        })
+
+        // 定义school组件
+        const school = Vue.extend({
+            template:`
+            <div>
+                <h2>学校名称：{{name}}</h2>
+                <h2>学校地址：{{address}}</h2>
+                <student></student>
+            </div>
+            `,
+            // 注册局部组件
+            data(){
+                return{
+                    name:'尚硅谷',
+                    address:'北京'
+                }
+            },
+            components:{
+                student
+            }
+        })
+
+        const hello = Vue.extend({
+            template:`<h1>{{msg}}</h1>`,
+            data(){
+                return {
+                    msg:'欢迎来到'
+                }
+            }
+        })
+
+        // 定义app组件
+        const app = Vue.extend({
+            template:`
+                <div>
+                    <hello></hello>
+                    <my-school></my-school>
+                </div>
+            `,
+            components:{
+                'my-school':school,
+                // hello:hello //由于键值都相同故可以简写成下面的形式
+                hello //但注意 在使用标签时使用hello
+            }
+        })
+
+        new Vue({
+            el:'#root',
+            components:{
+                app
+            }
+        })
+    </script>
+</html>

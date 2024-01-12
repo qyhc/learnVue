@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+
+     -->
+    <div id="root">
+        <!-- 遍历数组 -->
+        <h2>人员列表</h2>
+        <input type="text" placeholder="请输入名字" v-model="keyWord">
+        <ul>
+            <li v-for="(p,index) in filPersons" :key="index">
+                {{p.name}}-{{p.age}}-{{p.sex}}
+            </li>
+        </ul>
+
+    </div>
+
+    <script>
+        // 用watch实现
+        //#region
+        // new Vue({
+        //     el:'#root',
+        //     data:{
+        //         keyWord:'',
+        //         persons:[
+        //             {id:'001',name:'马冬梅',age:18,sex:'女'},
+        //             {id:'002',name:'周冬雨',age:19,sex:'女'},
+        //             {id:'003',name:'周杰伦',age:20,sex:'男'},
+        //             {id:'004',name:'温兆伦',age:21,sex:'男'}
+        //         ],
+        //         filPersons:[]
+        //     },
+        //     watch:{
+        //         keyWord:{
+                        // tip：由于空字符串是所有字符串的子集，即'xxx'.indexOf('')!=1恒成立
+                        // 所以添加immediate:true 指令让页面一开始加载时(此时keyWord为空字符串)
+                        // 就进行数组过滤，此时所有的字符串都满足会被保留，就实现了初始时展示所有数据
+        //             immediate:true,
+        //             handler(val){
+        //                 this.filPersons= this.persons.filter((p)=>{
+        //                     return p.name.indexOf(val) !=-1
+        //                 })
+        //             }
+        //         }
+        //     }
+        // })
+        //#endregion
+
+        // 用computed实现
+        new Vue({
+            el:'#root',
+            data:{
+                keyWord:'',
+                persons:[
+                    {id:'001',name:'马冬梅',age:18,sex:'女'},
+                    {id:'002',name:'周冬雨',age:19,sex:'女'},
+                    {id:'003',name:'周杰伦',age:20,sex:'男'},
+                    {id:'004',name:'温兆伦',age:21,sex:'男'}
+                ],
+            },
+            computed:{
+                filPersons(){
+                    return this.persons.filter((p)=>{
+                        // 因为计算属性实时监测依赖的属性的更新：keyword，然后根据数值的变化进行过滤
+                        return p.name.indexOf(this.keyWord)!==-1
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let data={
+            name:'尚硅谷',
+            // address:'北京'
+        }
+
+        // 能奏效 但是太死了
+        // let tmp = '尚硅谷'
+        // setInterval(()=>{
+        //     if(data.name !== tmp){
+        //         tmp = data.name
+        //         console.log('name被修改了')
+        //     }
+        // },100)
+
+        // 死循环栈溢出
+        // Object.defineProperty(data,'name',{
+        //     get(){
+        //         return data.name
+        //     },
+        //     set(val){
+        //         data.name = val
+        //     }
+        // })
+
+        // console.log('data.name')
+        // console.log(data.name)
+
+        // console.log('data[name]')
+        // console.log(data[name])
+
+        // 创建一个监视的实例对象，用于监视data中属性的变化
+
+        const obs = new Observer(data)
+        // console.log(obs)
+
+        let vm = {}
+        vm._data = data = obs
+
+        function Observer(obj){
+            // console.log('obj')
+            // console.log(obj)
+            // 汇总对象中所有的属性形成一个数组
+            const keys = Object.keys(obj)
+            // console.log('keys')
+            // console.log(keys)
+
+            // 遍历
+            // 给this指向的实例的元素附上get与set方法
+            keys.forEach((k)=>{
+                // k为属性名：name
+                // console.log('k')
+                // console.log(k)
+
+                Object.defineProperty(this,k,{
+                    // 这里的this将在new Observer(data)时动态指定
+                    // 指的是新创建的Observer的实例对象：obs
+                    get(){
+                        // console.log('this')
+                        // console.log(this)
+                        return obj[k]
+                    },
+                    set(val){
+                        obj[k] = val
+                        // obj[k] 是访问对象 obj 的属性 k 的方式。
+                        // 这是一种动态属性访问的写法，其中 k 是一个变量，可以是字符串
+                        // 是JavaScript 常见的动态属性访问
+                        console.log(`${k}被改了，我要去解析模板，生成虚拟DOM。。要开始忙了`)
+                    }
+                })
+            })
+        }
+
+    </script>
+</body>
+</html>

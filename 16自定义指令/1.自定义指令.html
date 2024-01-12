@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+        需求1：定义一个v-big指令，和v-text功能类似，但会把绑定的数值放大10倍
+        需求2：定义一个v-fbind指令，和v-bind功能类似，但可以让其所绑定的input元素默认获取焦点
+        自定义指令总结：
+            一、定义语法：
+                （1）局部指令
+                    new Vue({
+                        directives:{指令名:配置对象}
+                    })
+                    或
+                    new Vue({
+                        directives{指令名:回调函数}
+                    })
+
+                （2）全局指令
+                    Vue.directive(指令名,配置对象)
+                    或
+                    Vue.directive(指令名,回调函数)
+            二、配置对象中常用的三个回调：
+                    （1）bind：指令与元素成功绑定时调用
+                    （2）inserted：指令所在元素被插入页面时调用
+                    （3）update：指令所在模板结构被重新解析时调用
+            三、备注：
+                1.指令定义时不加v-，但使用时要加v-
+                2.指令名如果不是多个单词，要使用kebab-case命名方式，不要使用camelCase命名
+
+     -->
+    <div id="root">
+        <h2>当前的n值是：<span v-text="n"></span></h2>
+        <h2>放大10倍后的n值是：<span v-big-number="n"></span></h2>
+        <button @click="n++">点我n++</button>
+        <hr>
+        <input type="text" v-fbind:value="n">
+    </div>
+    <div id="root2">
+        <input type="text" v-fbind:value="n">
+    </div>
+</body>
+    <script>
+        // 全局自定义函数写法
+        Vue.directive('fbind', {
+            bind(element,binding){
+            element.value = binding.value
+            },
+            inserted(element,binding){
+                element.focus()
+            },
+            update(element,binding){
+                element.value = binding.value
+            }
+        });
+
+        new Vue({
+            el:'#root',
+            data:{
+                n:1
+            },
+            directives:{
+                // big函数(自定义)何时会被调用？
+                // 1.指令与元素成功绑定时（一上来（第一次刷新页面））
+                // 2.指令所在的模板被重新解析时（如模板数据被修改时将触发模板重新解析）
+                // 函数多个名字不推荐用驼峰命名法，要用-分隔且要加上''号
+                'big-number'(element,binding){
+                    element.innerText=binding.value * 10
+                    console.log(element,binding.value)
+                },
+                // 局部自定义函数完整写法
+                // fbind:{
+                //     // 指令与元素成功绑定时（一上来（第一次刷新页面））
+                //     // 元素已经准备好了但是还没有放进页面
+                //     bind(element,binding){
+                //         element.value = binding.value
+                //         // console.log('bind',this) //注意，此处的this是windows
+                //     },
+                //     // 指令所在元素被插入页面时
+                //     inserted(element,binding){
+                //         element.focus()
+                //         // console.log('inserted')
+                //     },
+                //     // 指令所在的模板被重新解析时
+                //     update(element,binding){
+                //         element.value = binding.value
+                //         // console.log('update')
+                //     }
+                // }
+            }
+        })
+
+        new Vue({
+            el:'#root2',
+            data:{
+                n:1
+            },
+        })
+    </script>
+</html>
