@@ -5,7 +5,7 @@
                 <!-- 将App中data的receive方法通过receive参数传给MyHeader儿子组件 -->
                 <MyHeader @addTodo="addTodo"></MyHeader>
                 <!-- 将App中data的todos数据通过todos参数传给MyList儿子组件 -->
-                <MyList :todos="todos"></MyList>
+                <MyList :todos="todos" :checkTodo="checkTodo" :deleteTodo="deleteTodo"></MyList>
                 <MyFooter :todos="todos" @checkAllTodo="checkAllTodo" @clearAllTodo="clearAllTodo"></MyFooter>
             </div>
         </div>
@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import pubsub from 'pubsub-js'
 import MyList from './components/MyList'
 import MyFooter from './components/MyFooter'
 import MyHeader from './components/MyHeader'
@@ -31,25 +30,7 @@ export default {
 			// 所以需要给个空数组
 			todos:JSON.parse(localStorage.getItem('todos')) ||[]
         }
-	},
-	mounted() {
-		this.$bus.$on('checkTodo',this.checkTodo)
-		// this.$bus.$on('deleteTodo',this.deleteTodo)
-
-		this.pubId = pubsub.subscribe('deleteTodo', this.deleteTodo)
-
-		this.$bus.$on('updateTodo',this.updateTodo)
-
-	},
-	beforeDestroy() {
-		this.$bus.$off('checkTodo')
-		// this.$bus.$off('deleteTodo')
-
-		pubsub.unsubscribe(this.pubId)
-
-		this.$bus.$off('updateTodo')
-
-	},
+    },
     methods: {
         addTodo(todoObj) {
             // console.log('我是App组件，我收到了数据：', x);
@@ -62,17 +43,10 @@ export default {
                 if(todo.id == id) todo.done = !todo.done
             })
 		},
-		// 占位符号：'_' 函数第一个参数用不到只用第二个，所以用占位符占用
-		deleteTodo(_,id) {
+		deleteTodo(id) {
 			this.todos = this.todos.filter((todo) => {
 				return todo.id !==id
 			})
-		},
-		// 更新一个todo
-		updateTodo(id, title) {
-            this.todos.forEach((todo) => {
-                if(todo.id == id) todo.title = title
-            })
 		},
 		// 全选or取消全选
 		checkAllTodo(done) {
@@ -122,12 +96,6 @@ export default {
 		color: #fff;
 		background-color: #da4f49;
 		border: 1px solid #bd362f;
-	}
-	.btn-edit {
-		color: #fff;
-		background-color: skyblue;
-		border: 1px solid #042d3a;
-		margin-right: 5px;
 	}
 	.btn-danger:hover {
 		color: #fff;

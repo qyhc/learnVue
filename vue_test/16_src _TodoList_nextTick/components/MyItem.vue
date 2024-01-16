@@ -1,24 +1,22 @@
 <template>
-	<transition name="todo" :appear="true">
-		<li>
-			<label>
-				<!-- <input type="checkbox" :checked="todo.done" @click="handleCheck(todo.id)"/> -->
-				<!-- 勾选->取消勾选 或者相反 都是一种改变状态的行为 会触发handleCheck方法 -->
-				<input type="checkbox" :checked="todo.done" @change="handleCheck(todo.id)"/>
-				<span v-show="!todo.isEdit">{{ todo.title }}</span>
-				<input
-				type="text"
-				v-show="todo.isEdit"
-				:value="todo.title"
-				@blur="handleBlur(todo,$event)"
-				ref="inputTitle"
-				>
-			</label>
-			<button class="btn btn-danger" @click="handelDelete(todo.id)">删除</button>
-			<button v-show="!todo.isEdit" class="btn btn-edit" @click="handelEdit(todo)">编辑</button>
-    	</li>
-	</transition>
+    <li>
+        <label>
+            <!-- <input type="checkbox" :checked="todo.done" @click="handleCheck(todo.id)"/> -->
+            <!-- 勾选->取消勾选 或者相反 都是一种改变状态的行为 会触发handleCheck方法 -->
+            <input type="checkbox" :checked="todo.done" @change="handleCheck(todo.id)"/>
+            <span v-show="!todo.isEdit">{{ todo.title }}</span>
+			<input
+			type="text"
+			v-show="todo.isEdit"
+			:value="todo.title"
+			@blur="handleBlur(todo,$event)"
+			ref="inputTitle"
+			>
+        </label>
+        <button class="btn btn-danger" @click="handelDelete(todo.id)">删除</button>
+        <button v-show="!todo.isEdit" class="btn btn-edit" @click="handelEdit(todo)">编辑</button>
 
+    </li>
 </template>
 
 <script>
@@ -126,19 +124,4 @@ export default {
 	li:hover button{
 		display: block;
 	}
-
-    .todo-enter-active{
-        animation: atguigu 1s;
-    }
-    .todo-leave-active{
-        animation: atguigu 1s reverse;
-    }
-    @keyframes atguigu {
-        from{
-            transform: translateX(100%);
-        }
-        to{
-            transform: translateX(0px);
-        }
-    }
 </style>
