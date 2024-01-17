@@ -134,3 +134,114 @@
     1.语法：this.$nextTick(回调函数)
     2.作用：在下一次DOM更新结束后执行其指定的回调
     3.什么时候用：当改变数据后，要基于更新后的新DOM进行某些操作时，要在nextTick所指定的回调函数中执行
+
+## Vue脚手架配置代理
+    方法一：
+        在Vue.config.js中添加如下配置：
+            devServer{
+                proxy:"http://localhost:5000"
+            }
+    方法二：
+        编写Vue.config.js配置具体代理规则：
+        module.exports = defineConfig({
+            devServer: {
+                proxy: {
+                '/atguigu': { //匹配所有以'/atguigu'开头的请求路径
+                    target: 'http://localhost:5000',
+                    pathRewrite:{'^/atguigu':''},  //重写路径：将/atguigu改成空字符串
+                    ws: true, //用于支持websocket
+                    changeOrigin: false //用于控制请求头中的host值
+                },
+                '/demo': {    //匹配所有以'/demo'开头的请求路径
+                    target: 'http://localhost:5001',
+                    pathRewrite:{'^/demo':''},  //重写路径：将/demo改成空字符串
+                    ws: true, //用于支持websocket
+                    changeOrigin: false //用于控制请求头中的host值
+                },
+                }
+            }
+        })
+
+    注意：
+        changeOrigin 设置为true时，服务器接收到的请求头中的host为：localhost:5000
+        changeOrigin 设置为false时，服务器接收到的请求头中的host为：localhost:8080
+        changeOrigin 默认值为true
+
+## 插槽
+    1.作用：让父组件可以向子组件指定位置插入html结构，也是一种组件间通信的方式，适用于 父组件=》子组件
+    2.分类：默认插槽、具名插槽、作用域插槽
+    3.使用方式：
+        1.默认插槽：
+            父组件中：
+                <category>
+                    <div>html结构1</div>
+                </category>
+            子组件中：
+                <template>
+                    <div>
+                        <!-- 定义插槽 -->
+                        <slot>插槽默认内容</slot>
+                    </div>
+                </template>
+        2.具名插槽：
+            父组件中：
+                <Category>
+                    <template slot="center">
+                        <div>html结构1</div>
+                    </template>
+
+                    <template v-slot:footer>
+                        <div>html结构2</div>
+                    </template>
+                </Category>
+            子组件中：
+                    <template>
+                        <div>
+                            <!-- 定义插槽 -->
+                            <slot name="center">默认插槽内容1...</slot>
+                            <slot name="footer">默认插槽内容2...</slot>
+                            <!-- 注意内容可以自动追加而不会覆盖，具体看例子 -->
+                        </div>
+                    </template>
+        3.作用域插槽：
+            1.理解：数据在组件的自身，当根据数据生成的结构需要组件中的使用者来决定（games数据在Category组件中，
+                但使用数据所遍历出来的结构由App组件决定）
+            2.具体编码：
+                父组件中：
+                    <Category>
+                        <template slot-scope="scopeData">
+                            <!-- 生成的时ul列表 -->
+                            <ul>
+                                <li v-for="g in scopeData.games" :key="g">{{g}}</li>
+                            </ul>
+                        </template>
+                    </Category>
+
+                    <Category>
+                        <template slot-scope="scopeData">
+                            <!-- 生成的h4标题 -->
+                            <h4 v-for="g in scopeData.games" :key="g">{{g}}</h4>
+                        </template>
+                    </Category>
+
+                子组件中：
+                    <script>
+                        export default{
+                            name:'Category',
+                            props:['title'],
+                            <!-- 数据在子组件自身 -->
+                            data(){
+                                return{
+                                    games:['game1','game2','game3']
+                                }
+                            },
+                        }
+                    </script>
+
+
+
+
+
+
+
+
